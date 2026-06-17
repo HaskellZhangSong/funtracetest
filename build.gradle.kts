@@ -1,10 +1,13 @@
+import dev.songzh.function.trace.FunctionTracerGradleExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+
 plugins {
-    id 'org.jetbrains.kotlin.multiplatform' version '2.1.0'
-    id 'dev.songzh.function.trace' version '0.3.0'
+    kotlin("multiplatform") version "2.1.0"
+    id("dev.songzh.function.trace") version "0.3.0"
 }
 
-group = 'org.hw'
-version = '1.0-SNAPSHOT'
+group = "org.hw"
+version = "1.0-SNAPSHOT"
 
 // Make mavenLocal available in every project for the funtrace runtime library.
 // Also add the funtrace dependency to commonMain of every KMP project from here,
@@ -15,13 +18,11 @@ allprojects {
         mavenCentral()
     }
 
-    plugins.withId('org.jetbrains.kotlin.multiplatform') {
-        kotlin {
-            sourceSets {
-                commonMain {
-                    dependencies {
-                        implementation 'func.trace:funtrace:1.0.0'
-                    }
+    plugins.withId("org.jetbrains.kotlin.multiplatform") {
+        extensions.configure<KotlinMultiplatformExtension> {
+            sourceSets.named("commonMain").configure {
+                dependencies {
+                    implementation("func.trace:funtrace:1.0.0")
                 }
             }
         }
@@ -30,8 +31,8 @@ allprojects {
 
 // Automatically apply the plugin to every subproject added in the future
 subprojects {
-    apply plugin: 'dev.songzh.function.trace'
-    functionTracer {
+    apply(plugin = "dev.songzh.function.trace")
+    extensions.configure<FunctionTracerGradleExtension> {
         traceAll = true
         packagePath = "func.trace"
     }
@@ -45,7 +46,7 @@ kotlin {
     macosArm64 {
         binaries {
             executable {
-                entryPoint = 'org.hw.main'
+                entryPoint = "org.hw.main"
             }
         }
     }
@@ -54,19 +55,13 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation project(':greet')
+                implementation(project(":greet"))
             }
         }
         commonTest {
             dependencies {
-                implementation kotlin('test')
+                implementation(kotlin("test"))
             }
-        }
-        jvmMain {
-            dependencies {}
-        }
-        jvmTest {
-            dependencies {}
         }
     }
 }
@@ -76,3 +71,4 @@ functionTracer {
     traceAll = true
     packagePath = "func.trace"
 }
+
