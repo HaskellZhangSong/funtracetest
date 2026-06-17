@@ -14,9 +14,7 @@ kotlin {
 
     sourceSets {
         commonMain {
-            dependencies {
-                implementation 'func.trace:funtrace:1.0.0'
-            }
+            dependencies {}
         }
         commonTest {
             dependencies {
