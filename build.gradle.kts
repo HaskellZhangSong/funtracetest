@@ -19,22 +19,28 @@ allprojects {
     }
 
     plugins.withId("org.jetbrains.kotlin.multiplatform") {
-        extensions.configure<KotlinMultiplatformExtension> {
-            sourceSets.named("commonMain").configure {
-                dependencies {
-                    implementation("func.trace:funtrace:1.0.0")
+        // Skip funtrace itself to avoid a circular dependency
+        if (name != "funtrace") {
+            extensions.configure<KotlinMultiplatformExtension> {
+                sourceSets.named("commonMain").configure {
+                    dependencies {
+                        implementation(project(":funtrace"))
+                    }
                 }
             }
         }
     }
 }
 
-// Automatically apply the plugin to every subproject added in the future
+// Automatically apply the plugin to every subproject added in the future.
+// Skip funtrace itself — tracing its own hook functions would be recursive.
 subprojects {
-    apply(plugin = "dev.songzh.function.trace")
-    extensions.configure<FunctionTracerGradleExtension> {
-        traceAll = true
-        packagePath = "func.trace"
+    if (name != "funtrace") {
+        apply(plugin = "dev.songzh.function.trace")
+        extensions.configure<FunctionTracerGradleExtension> {
+            traceAll = true
+            packagePath = "func.trace"
+        }
     }
 }
 

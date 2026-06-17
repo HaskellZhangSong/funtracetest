@@ -1,0 +1,26 @@
+plugins {
+    id 'org.jetbrains.kotlin.multiplatform' version '2.1.0'
+}
+
+group = 'func.trace'
+version = '1.0.0'
+
+kotlin {
+    jvmToolchain(17)
+
+    jvm()
+    macosArm64()
+    macosX64()
+
+    sourceSets {
+        commonMain {
+            dependencies {}
+        }
+        commonTest {
+            dependencies {
+                implementation kotlin('test')
+            }
+        }
+    }
+}
+

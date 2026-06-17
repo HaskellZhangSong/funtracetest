@@ -11,5 +11,5 @@ plugins {
 
 rootProject.name = 'funtest'
 
-include ':greet'
+include ':greet', ':funtrace'
 
